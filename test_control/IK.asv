@@ -1,0 +1,173 @@
+function k =IK(Px, Py, Pz)
+%% Length
+D2 = 167;
+D4 = 217;
+D6 = 246;
+D7 = 50;
+initial_position = [0 0 0];
+%% Declaration
+o=0;
+n=1;
+the2n=0;
+bo_nghiem1 = zeros(1,3);
+bo_nghiem2 = zeros(1,3);
+bo_nghiem_final = zeros(1,3);
+hieu1 = zeros(1,3);
+hieu2 = zeros(1,3);
+%% Input the End-Effector position
+x = Px; y = Py; z = Pz;
+
+a1 = 2 * D4 * y;
+b1 = 2 * D4 * (x - D2);
+d1 = (x-D2)*(x-D2) + y*y + D4*D4-D6*D6;
+
+alp = atan2(b1,a1);
+theA = atan2(d1, sqrt(a1*a1 + b1*b1 - d1*d1)) - alp;
+theB = atan2(d1, -sqrt(a1*a1 + b1*b1 - d1*d1)) - alp;
+the2a = [theA; theB];
+
+%% Check the output of basic_01
+if (the2a(1)>(pi/2 +0.1) || the2a(1)<(-pi/2-0.1))
+    if (the2a(2)>(pi/2 +0.1) || the2a(2)<(-pi/2-0.1))
+        o=1;
+    else
+        o=0;
+    end
+end
+
+%% Seperate into 2 cases
+%% Case 1: Output of the basic_01 is incorrect, calculate 1 more time
+if (o==1)
+    y=-y;
+    a1 = 2 * D4 * y;
+    b1 = 2 * D4 * (x - D2);
+    d1 = (x-D2)*(x-D2) + y*y + D4*D4-D6*D6;
+    
+    thed1 = zeros(1,3);
+    thed2 = zeros(2,3);
+    
+    alp = atan2(b1,a1);
+    theA = atan2(d1, sqrt(a1*a1 + b1*b1 - d1*d1)) - alp;
+    theB = atan2(d1, -sqrt(a1*a1 + b1*b1 - d1*d1)) - alp;
+    the2 = [theA; theB];
+
+    % Check the value of the2
+    if (the2(1)< (pi/2+0.1) && the2(1)> (-pi/2-0.1))
+        if (the2(2)< (pi/2+0.1) && the2(2)> (-pi/2-0.1))
+            n=3;
+        else
+            n=1;
+            the2n = the2(1);
+        end
+    elseif (the2(2)< (pi/2+0.1) && the2(2)> (-pi/2-0.1))
+        n=2;
+        the2n = the2(2);
+    end
+
+    
+    % Check value of n => Get the right output
+    if (n==1 || n==2)
+        the23=atan2(y-sin(the2n)*D4,x-cos(the2n)*D4-D2);
+        the3=the23-the2n;
+        thed1(1,1) = -the2n;
+        thed1(1,2)= -the3;
+        thed1(1,3)= z + D7;
+
+        % Display output in degree
+        % Chi co 1 bo nghiem
+        bo_nghiem1 = [thed1(1,1)* 180/pi,thed1(1,2)* 180/pi,thed1(1,3)];
+    elseif (n==3)
+        for i=1:2
+            the23=atan2(y-sin(the2(i))*D4,x-cos(the2(i))*D4-D2);
+            the3=the23-the2(i);
+            thed2(i,1) = -the2(i);
+            thed2(i,2) = -the3;
+            thed2(i,3) = z + D7;
+        end
+
+        % Display output in degree
+        % Co 2 bo nghiem
+        bo_nghiem1 = [thed2(1,1)* 180/pi,thed2(1,2)* 180/pi,thed2(1,3)];
+        bo_nghiem2 = [thed2(2,1)* 180/pi,thed2(2,2)* 180/pi,thed2(2,3)];
+    end
+%% Case 2: Output of the basic_01 is incorrect, calculate 1 more time
+else
+    thed1 = zeros(1,3);
+    thed2 = zeros(2,3);
+    the2 = the2a;
+    
+    % Check the value of the2
+    if (the2(1)< (pi/2+0.1) && the2(1)> (-pi/2-0.1))
+        if (the2(2)< (pi/2+0.1) && the2(2)> (-pi/2-0.1))
+            n=3;
+        else
+            n=1;
+            the2n = the2(1);
+        end
+    elseif (the2(2)< (pi/2+0.1) && the2(2)> (-pi/2-0.1))
+        n=2;
+        the2n = the2(2);
+    end
+
+    % Check value of n => Get the right output
+    if (n==1 || n==2)
+        the23=atan2(y-sin(the2n)*D4,x-cos(the2n)*D4-D2);
+        the3=the23-the2n;
+        thed1(1,1) = the2n;
+        thed1(1,2)= the3;
+        thed1(1,3)= z + D7;
+
+        % Display output in degree
+        % Chi co 1 bo nghiem
+        bo_nghiem1 = [thed1(1,1)* 180/pi,thed1(1,2)* 180/pi,thed1(1,3)];
+    elseif (n==3)
+        for i=1:2
+            the23=atan2(y-sin(the2(i))*D4,x-cos(the2(i))*D4-D2);
+            the3=the23-the2(i);
+            thed2(i,1) = the2(i);
+            thed2(i,2) = the3;
+            thed2(i,3) = z + D7;
+        end
+
+        % Display output in degree
+        % Co 2 bo nghiem
+        bo_nghiem1 = [thed2(1,1)* 180/pi,thed2(1,2)* 180/pi,thed2(1,3)];
+        bo_nghiem2 = [thed2(2,1)* 180/pi,thed2(2,2)* 180/pi,thed2(2,3)];
+    end
+end
+for m=1:3
+    if (bo_nghiem1(m) < 1 && bo_nghiem1(m) > -1)
+        bo_nghiem1(m) = 0;
+    end
+    if (bo_nghiem2(m) < 1 && bo_nghiem2(m) > -1)
+        bo_nghiem2(m) = 0;
+    end
+end
+%% Select the final set of solution
+% Tru bo nghiem moi tinh cho bo nghiem hien tai cua robot (TH co 2 bo nghiem)
+if (bo_nghiem2(1)==0 && bo_nghiem2(2)==0 && bo_nghiem2(3)==0)
+    bo_nghiem_final = bo_nghiem1;
+    % Tru bo nghiem moi tinh cho bo nghiem hien tai cua robot (TH co 1 bo nghiem)
+else
+    for j=1:3
+        hieu1(j) = abs(bo_nghiem1(j) - initial_position(j));
+        hieu2(j) = abs(bo_nghiem2(j) - initial_position(j));
+    end
+    % Lay tong cac hieu va so sanh
+    h1 = hieu1(1) + hieu1(2) + hieu1(3);
+    h2 = hieu2(1) + hieu2(2) + hieu2(3);
+    if (h1>h2)
+        bo_nghiem_final = bo_nghiem2;
+    elseif (h2>h1)
+        bo_nghiem_final = bo_nghiem1;
+    end
+end
+%% Verify the result of Inverse block
+% % Bo nghiem 1
+% P1 = fk_3dof(bo_nghiem1(1)*pi/180, bo_nghiem1(2)*pi/180, bo_nghiem1(3));
+% 
+% % Bo nghiem 2
+% P2 = fk_3dof(bo_nghiem2(1)*pi/180, bo_nghiem2(2)*pi/180, bo_nghiem2(3));
+k = bo_nghiem1;
+k=bo_nghiem1
+end
