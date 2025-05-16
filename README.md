@@ -86,11 +86,9 @@ An academic project that combines **Computer Vision**, **Robotics**, and **Embed
 ---
 
 ## ▶ Demo
+This short video demonstrates the real-time object classification and sorting system using a 3-DOF SCARA robotic arm, controlled via MATLAB and Arduino.
 
-▶ Watch: `Video_demo.mp4`  
-📸 System before operation:
-
-![Demo Screenshot](./Hệ thống trước khi chạy.jpg) 
+[![Watch Demo](https://img.youtube.com/vi/8Hgz4ZEQ1kY/0.jpg)](https://youtube.com/shorts/8Hgz4ZEQ1kY)
 
 ---
 
