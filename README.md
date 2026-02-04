@@ -142,9 +142,12 @@ In addition to testing **Red / Blue / Yellow**, we also tested an **Unknown** sc
 
 | Metric                  | Result                          |
 |--------------------------|---------------------------------|
-| Color detection accuracy | 100% (under controlled lighting)|
+| Known-color detection accuracy (Red/Blue/Yellow) | 100% (under controlled lighting, observed in demo) |
+| Unknown rejection (yellow cap + ink strokes) | Classified as Unknown (observed) |
 | Sorting success rate     | ~95%                            |
 | Positioning error margin | ~2–4 mm                         |
+
+Note: These results are reported under controlled lighting. Since the method is based on HSV thresholding, performance can degrade under severe lighting changes, heavy occlusion, or large surface markings.
 
 ---
 
