@@ -124,6 +124,20 @@ All targets (combined view):
 
 ---
 
+## Unknown Case (Rejection Behavior)
+
+In addition to testing **Red / Blue / Yellow**, we also tested an **Unknown** scenario to validate the system's ability to *reject* ambiguous inputs.
+
+- **How we created Unknown**: we took a normal **yellow bottle cap** and drew several **black ink strokes** on its surface.
+- **Observed behavior**:
+  - Clean yellow cap -> classified as **Yellow**
+  - Clean red cap -> classified as **Red**
+  - Blue cap with small printed text (expiry code) -> still classified as **Blue**
+  - Yellow cap with ink strokes -> classified as **Unknown**
+- **Why this happens**: the added ink changes the local **HSV values** and can break/alter the segmented region (after morphological filtering). As a result, the detected region no longer satisfies the predefined HSV thresholds reliably, so labeling it as **Unknown** helps avoid a wrong color decision.
+
+---
+
 ## 📊 Performance
 
 | Metric                  | Result                          |
